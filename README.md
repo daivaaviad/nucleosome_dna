@@ -23,15 +23,49 @@ S = randseq(147);
 
 If you find this code useful, please cite:
 
-Rasa Giniunaite and Daiva Petkeviciute-Gerlach.
-Predicting the sequence-dependent configuration and
-energy of DNA in a nucleosome by coarse-grain modelling.
-Submitted (2022).
+Giniūnaitė, R. and Petkevičiūtė-Gerlach, D. (2022) Predicting the configuration and energy of 
+DNA in a nucleosome by coarse-grain modelling. Phys. Chem. Chem. Phys., 2022, 26124–26133.
 
-For the cgDNA+ model, please cite:
+--------------------------------------------------------------------
 
-Patelli, A. S., 2019. A sequence-dependent coarse-grain model of B-DNA with explicit description of bases and phosphate
-groups parametrised from large scale Molecular Dynamics simulations. Ph.D. thesis, EPFL.
+The cgDNA+ (cgNA+) model, also used inside the function seq2nucleosome_grad_descent.m, constructs an equilibrium 
+shape coordinate vector w and a stiffness matrix K for a double stranded DNA of a given sequence S
+and a model parameter set params. 
 
-Petkeviciute, D., M. Pasi, O. Gonzalez, and J. Maddocks, 2014. cgDNA: a software package for the prediction of
-sequence-dependent coarse-grain free energies of B-form DNA. Nucleic Acids Res. 42:e153–e153.
+The potential (free) energy U for any configuration x of a sequence S then reads:
+U = (w-x)' * K * (w-x) (here w and x are column vectors and ' is a vector transpose). 
+
+Input:
+
+S      - any chosen DNA sequence;
+          For example: S = 'ATGAAGC';
+params - a model parameter set;    
+          For example: params = load('/Users/daiva/dna/mc/Di-hemi-meth-hmeth.mat');
+
+Output:
+
+w    - equilibrium configuration coordinate vector for the sequence S;
+K    - stiffness matrix for the sequence S. 
+
+Example of usage:
+
+params = load('/Users/daiva/dna/mc/Di-hemi-meth-hmeth.mat');
+S = 'ATGAAGC';
+[w, K] = constructSeqParms(S, params);
+
+The sequence S can include a methylated and a hydroxymethylated cytosine in a CpG dinucleotide step.
+A symmetrically methylated CpG dinucleotide (when cytosines are methylated on both strands) is referred to as MN, e.g, S = ATTMNAC;
+a symmetrically hydroxymethylated CpG dinucleotide: HK, e.g, S = ATTHKAC;
+an asymetrically methylated CpG (methylation only on one strand): MG or CN;
+an asymetrically hydroxymethylated CpG (methylation only on one strand): HG or CK.
+
+
+For the cgDNA+ (cgNA+) model, please cite:
+
+Sharma, R. cgNA+: A sequence-dependent coarse-grain model of double-stranded nucleic acids. PhD thesis EPFL (2022) # 9792.
+
+Patelli, A. S. A sequence-dependent coarse-grain model of B-DNA with explicit description of bases and phosphate 
+groups parametrised from large scale Molecular Dynamics simulations. PhD thesis EPFL (2019) # 9552.
+
+Petkevičiūtė, D., Pasi, M., Gonzalez, O., and Maddocks, J. (2014) cgDNA: a software package for the prediction of 
+sequence-dependent coarse-grain free energies of B-form DNA. Nucleic Acids Res., 42(20), e153–e153.
